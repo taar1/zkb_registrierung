@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.registration.RegistrationSuccessFragment">
+
+    <TextView
+        android:id="@+id/thankyou"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/thanks_for_registering"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/label_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/full_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintStart_toStartOf="@+id/thankyou"
+        app:layout_constraintTop_toBottomOf="@+id/thankyou" />
+
+    <TextView
+        android:id="@+id/label_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/email"
+        app:layout_constraintStart_toStartOf="@+id/thankyou"
+        app:layout_constraintTop_toBottomOf="@+id/value_name" />
+
+    <TextView
+        android:id="@+id/label_birthdate"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/birthdate"
+        app:layout_constraintStart_toStartOf="@+id/thankyou"
+        app:layout_constraintTop_toBottomOf="@+id/value_email" />
+
+    <TextView
+        android:id="@+id/value_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="value_name"
+        app:layout_constraintStart_toStartOf="@+id/label_name"
+        app:layout_constraintTop_toBottomOf="@+id/label_name" />
+
+    <TextView
+        android:id="@+id/value_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="value_email"
+        app:layout_constraintStart_toStartOf="@+id/label_email"
+        app:layout_constraintTop_toBottomOf="@+id/label_email" />
+
+    <TextView
+        android:id="@+id/value_birthdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="value_birthdate"
+        app:layout_constraintStart_toStartOf="@+id/label_birthdate"
+        app:layout_constraintTop_toBottomOf="@+id/label_birthdate" />
+</androidx.constraintlayout.widget.ConstraintLayout>
