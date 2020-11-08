@@ -14,14 +14,16 @@ import ch.zkb.registrierung.R
 import ch.zkb.registrierung.data.ZkbDatabase
 import java.util.*
 
-class RegistrationViewModel @ViewModelInject constructor(app: Application) : AndroidViewModel(app) {
+class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
 
     // TODO FIXME hier crasht es noch...
     // TODO FIXME hier crasht es noch...
     // TODO FIXME hier crasht es noch...
     // TODO FIXME hier crasht es noch...
     // TODO FIXME hier crasht es noch...
-//    private val registrationRepository: RegistrationRepository = RegistrationRepository(ZkbDatabase.getDatabase(app))
+//    val userDao = ZkbDatabase.getDatabase(app).userDao()
+//    private val registrationRepository: RegistrationRepository = RegistrationRepository(userDao)
+    private val registrationRepository: RegistrationRepository = RegistrationRepository(ZkbDatabase.getDatabase(app).userDao())
 
     private val _registrationForm = MutableLiveData<RegistrationFormState>()
     val registrationFormState: LiveData<RegistrationFormState> = _registrationForm

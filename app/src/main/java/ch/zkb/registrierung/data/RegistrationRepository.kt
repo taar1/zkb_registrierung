@@ -4,7 +4,7 @@ import ch.zkb.registrierung.data.model.RegisteredUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RegistrationRepository(val roomDatabase: ZkbDatabase) {
+class RegistrationRepository(private val userDao: UserDao) {
 
     var user: RegisteredUser? = null
         private set
@@ -18,7 +18,7 @@ class RegistrationRepository(val roomDatabase: ZkbDatabase) {
 
     suspend fun insertUser(user: RegisteredUser) {
         withContext(Dispatchers.IO) {
-            roomDatabase.userDao().insert(user)
+            userDao.insert(user)
 
             setRegisteredUser(user)
         }

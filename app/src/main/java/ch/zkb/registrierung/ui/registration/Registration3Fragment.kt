@@ -1,8 +1,10 @@
 package ch.zkb.registrierung.ui.registration
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +14,25 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import ch.zkb.registrierung.R
 import ch.zkb.registrierung.databinding.RegistrationFragmentBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.registration_fragment.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.inject.Inject
 
-class Registration3Fragment : Fragment() {
+
+@AndroidEntryPoint
+class Registration3Fragment @Inject constructor() : Fragment() {
 
     private val registrationViewModel: RegistrationViewModel by viewModels()
     private lateinit var viewBinding: RegistrationFragmentBinding
 
     private val viewModel: Registration3ViewModel by viewModels()
+
 
     companion object {
         fun newInstance() = Registration3Fragment()
@@ -44,8 +55,7 @@ class Registration3Fragment : Fragment() {
         val register = viewBinding.register
         val loading = viewBinding.loading
 
-        registrationViewModel.registrationFormState.observe(viewLifecycleOwner, androidx.lifecycle.Observer {  })
-
+        setMinAndMaxDateInDatePicker()
 
 
 //        registrationViewModel.registrationFormState.observe(viewLifecycleOwner, Observer {
@@ -117,6 +127,8 @@ class Registration3Fragment : Fragment() {
                 false
             }
 
+
+
             register.setOnClickListener {
                 // TODO FIXME  Date() mit etwas richtigem ersetzen...
                 // TODO FIXME  Date() mit etwas richtigem ersetzen...
@@ -129,8 +141,46 @@ class Registration3Fragment : Fragment() {
                 )
             }
         }
+
+        // User clicks into the Birthdate field to display the date picker dialog
+        birthdate.setOnClickListener {
+            date_picker_layout.visibility = View.VISIBLE
+            container.setBackgroundColor(Color.BLACK)
+        }
+
+        // Confirmation button in Birthdate selection dialog
+        confirm_date_button.setOnClickListener {
+            // Hide date selector, show layout underneath
+            date_picker_layout.visibility = View.GONE
+            container.setBackgroundColor(Color.WHITE)
+
+            var selectedDate = LocalDate.of(date_picker.year, date_picker.month + 1, date_picker.dayOfMonth)
+            var localeFormatter = DateTimeFormatter.ofPattern("d. MMMM yyyy") // Swiss Date Format
+
+            // Fill the EditText field with the selected date
+            birthdate.setText(selectedDate.format(localeFormatter))
+        }
+
+//        register.isEnabled = true
+        register.setOnClickListener(
+            Navigation.createNavigateOnClickListener(
+                R.id.registrationSuccessFragment,
+                null
+            )
+        )
     }
 
+    private fun setMinAndMaxDateInDatePicker() {
+        val minDate = Calendar.getInstance()
+        minDate.set(1900, 0, 1)
+        date_picker.minDate = minDate.timeInMillis
+
+        val maxDate = Calendar.getInstance()
+        maxDate.set(2019, 11, 31)
+        date_picker.maxDate = maxDate.timeInMillis
+    }
+
+    private val TAG = "Registration3Fragment"
 
     private fun updateUiWithUser(model: RegisteredUserView) {
         val welcome = getString(R.string.welcome)

@@ -7,7 +7,7 @@ import androidx.room.Query
 import ch.zkb.registrierung.data.model.RegisteredUser
 
 @Dao
-interface RegisteredUserDao {
+interface UserDao {
 
     @Query("SELECT * FROM registered_user ORDER BY fullname ASC")
     fun getUsers(): List<RegisteredUser>

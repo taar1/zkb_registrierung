@@ -9,9 +9,10 @@ import ch.zkb.registrierung.data.model.RegisteredUser
 @Database(entities = [RegisteredUser::class], version = 1, exportSchema = false)
 abstract class ZkbDatabase : RoomDatabase() {
 
-    abstract fun userDao(): RegisteredUserDao
+    abstract fun userDao(): UserDao
 
     companion object {
+        @Volatile
         var INSTANCE: ZkbDatabase? = null
 
         fun getDatabase(context: Context): ZkbDatabase {
@@ -21,7 +22,7 @@ abstract class ZkbDatabase : RoomDatabase() {
                     context.applicationContext,
                     ZkbDatabase::class.java,
                     "zkb_db"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 // return the instance
                 instance
