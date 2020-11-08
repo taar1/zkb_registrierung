@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -82,22 +81,12 @@ class Registration3Fragment @Inject constructor() : Fragment() {
         })
 
 
-//        registrationViewModel.registrationFormState.observe(viewLifecycleOwner, Observer {
-//            val registrationState = it ?: return@Observer
-//
-//            // disable login button unless both username / password is valid
-//            register.isEnabled = registrationState.isDataValid
-//
-//            if (registrationState.fullnameError != null) {
-//                fullname.error = getString(registrationState.fullnameError)
-//            }
-//            if (registrationState.emailError != null) {
-//                email.error = getString(registrationState.emailError)
-//            }
-//        })
-//
-//        registrationViewModel.registrationResult.observe(viewLifecycleOwner, Observer {
-//            val loginResult = it ?: return@Observer
+        // TODO FIXME check if registration was a success (DB insert was successful)
+        // TODO FIXME an dif so show the next fragment with the data.
+        registrationViewModel.registrationResult.observe(viewLifecycleOwner, {
+
+//            it.error
+//            it.success
 //
 //            loading.visibility = View.GONE
 //            if (loginResult.error != null) {
@@ -106,11 +95,19 @@ class Registration3Fragment @Inject constructor() : Fragment() {
 //            if (loginResult.success != null) {
 //                updateUiWithUser(loginResult.success)
 //            }
-//
-//            // TODO go to next fragment here....
-//            // TODO go to next fragment here....
-//            //Complete and destroy login activity once successful
-//        })
+
+
+            // If success, go to next fragment
+            if (true) {
+                // TODO go to next fragment here....
+                // TODO pass email address to make DB call
+                Navigation.createNavigateOnClickListener(
+                    R.id.registrationSuccessFragment,
+                    null
+                )
+            }
+
+        })
 
         fullname.afterTextChanged {
             registrationViewModel.registrationDataChanged(
@@ -120,26 +117,12 @@ class Registration3Fragment @Inject constructor() : Fragment() {
             )
         }
 
-        email.apply {
-            afterTextChanged {
-                registrationViewModel.registrationDataChanged(
-                    fullname.text.toString(),
-                    email.text.toString(),
-                    selectedBirthdateTimestamp
-                )
-            }
-
-//            setOnEditorActionListener { _, actionId, _ ->
-//                when (actionId) {
-//                    EditorInfo.IME_ACTION_DONE ->
-//                        registrationViewModel.register(
-//                            fullname.text.toString(),
-//                            email.text.toString(),
-//                            selectedBirthdateTimestamp
-//                        )
-//                }
-//                false
-//            }
+        email.afterTextChanged {
+            registrationViewModel.registrationDataChanged(
+                fullname.text.toString(),
+                email.text.toString(),
+                selectedBirthdateTimestamp
+            )
         }
 
         // User clicks into the Birthdate field to display the date picker dialog
@@ -181,26 +164,14 @@ class Registration3Fragment @Inject constructor() : Fragment() {
             )
         }
 
-//        register.isEnabled = true
-
-
-        // TODO FIXME objekt übergeben wegen email damit man eine room DB abfrage machen kann
-        register.setOnClickListener(
-            Navigation.createNavigateOnClickListener(
-                R.id.registrationSuccessFragment,
-                null
+        register.setOnClickListener {
+            // TODO show a temporary loading animation.
+            registrationViewModel.insertUserToDb(
+                fullname.text.toString(),
+                email.text.toString(),
+                selectedBirthdateTimestamp
             )
-        )
-
-//        register.setOnClickListener {
-//            loading.visibility = View.VISIBLE
-//
-//            registrationViewModel.register(
-//                fullname.text.toString(),
-//                email.text.toString(),
-//                selectedBirthdateTimestamp
-//            )
-//        }
+        }
     }
 
     /**
@@ -253,11 +224,6 @@ class Registration3Fragment @Inject constructor() : Fragment() {
             Toast.LENGTH_LONG
         ).show()
     }
-
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(activity, errorString, Toast.LENGTH_SHORT).show()
-    }
-
 }
 
 

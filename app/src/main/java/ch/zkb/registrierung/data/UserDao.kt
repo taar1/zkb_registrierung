@@ -17,4 +17,7 @@ interface UserDao {
 
     @Query("DELETE FROM registered_user")
     suspend fun deleteAll()
+
+    @Query("SELECT * FROM registered_user where email = :email")
+    suspend fun getUser(email: String): RegisteredUser
 }

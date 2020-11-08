@@ -5,19 +5,15 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import ch.zkb.registrierung.R
 import ch.zkb.registrierung.data.RegistrationRepository
 import ch.zkb.registrierung.data.ZkbDatabase
+import ch.zkb.registrierung.data.model.RegisteredUser
+import kotlinx.coroutines.launch
 
 class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
 
-    // TODO FIXME hier crasht es noch...
-    // TODO FIXME hier crasht es noch...
-    // TODO FIXME hier crasht es noch...
-    // TODO FIXME hier crasht es noch...
-    // TODO FIXME hier crasht es noch...
-//    val userDao = ZkbDatabase.getDatabase(app).userDao()
-//    private val registrationRepository: RegistrationRepository = RegistrationRepository(userDao)
     private val registrationRepository: RegistrationRepository =
         RegistrationRepository(ZkbDatabase.getDatabase(app).userDao())
 
@@ -27,16 +23,40 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
     private val _registrationResult = MutableLiveData<RegistrationResult>()
     val registrationResult: LiveData<RegistrationResult> = _registrationResult
 
-    fun register(fullname: String, email: String, birthdate: Long) {
-        // can be launched in a separate asynchronous job
+    fun insertUserToDb(fullname: String, email: String, birthdate: Long) {
 
+        viewModelScope.launch {
 
-        // TODO FIXME insert stuff to room DB
-        // TODO FIXME insert stuff to room DB
-        // TODO FIXME insert stuff to room DB
-        // TODO FIXME insert stuff to room DB
+            // TODO FIXME insert into DB, check if success and update "registrationResult" object
+            // TODO FIXME insert into DB, check if success and update "registrationResult" object
+            // TODO FIXME insert into DB, check if success and update "registrationResult" object
+            // TODO FIXME insert into DB, check if success and update "registrationResult" object
 
-//        val result = registrationRepository.register(fullname, email, birthdate)
+            val result =
+                registrationRepository.insertUser(RegisteredUser(fullname, email, birthdate))
+
+            registrationRepository.getUser(email)
+
+//            _registrationResult.value =
+
+//            try {
+//
+//
+//                Log.d(TAG, "XXXXX refreshDataFromRepository: NETWORK OK")
+//            } catch (networkError: IOException) {
+//                Log.d(TAG, "XXXXX refreshDataFromRepository: IOException NO NETWORK")
+//
+//                repository.getSystemsListFromRoom()
+//                _systems.postValue(repository.systemsList)
+//            }
+//
+//            // If data is empty show a error message
+//            if (repository.systemsList.isNullOrEmpty()) {
+//                Log.d(TAG, "XXXXX refreshDataFromRepository: isNullOrEmpty")
+//                _eventNetworkError.value = true
+//            }
+        }
+
 //
 //        if (result is Result.Success) {
 //            _registrationResult.value = RegistrationResult(success = RegisteredUserView(displayName = result.data.fullname))
@@ -73,7 +93,11 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
      * Validating the entered email address here
      */
     private fun isEmailValid(email: String): Boolean {
-        Log.d(TAG, "isEmailValid: " + email)
+        // TODO email validation
+        // TODO email validation
+        // TODO email validation
+        // TODO email validation
+        // TODO email validation
         return email.length > 5
     }
 

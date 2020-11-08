@@ -9,9 +9,6 @@ class RegistrationRepository(private val userDao: UserDao) {
     var user: RegisteredUser? = null
         private set
 
-    val isRegistered: Boolean
-        get() = user != null
-
     init {
         user = null
     }
@@ -19,12 +16,16 @@ class RegistrationRepository(private val userDao: UserDao) {
     suspend fun insertUser(user: RegisteredUser) {
         withContext(Dispatchers.IO) {
             userDao.insert(user)
-
-            setRegisteredUser(user)
         }
     }
 
-//    fun register(fullname: String, email: String, birthdate: Long): Result<RegisteredUser> {
+    suspend fun getUser(email: String) {
+        withContext(Dispatchers.IO) {
+            user = userDao.getUser(email)
+        }
+    }
+
+    //    fun register(fullname: String, email: String, birthdate: Long): Result<RegisteredUser> {
 //        // handle registration
 //
 //        val result = dataSource.register(fullname, email, birthdate)
@@ -36,7 +37,4 @@ class RegistrationRepository(private val userDao: UserDao) {
 //        return result
 //    }
 //
-    private fun setRegisteredUser(registeredUser: RegisteredUser) {
-        this.user = registeredUser
-    }
 }
