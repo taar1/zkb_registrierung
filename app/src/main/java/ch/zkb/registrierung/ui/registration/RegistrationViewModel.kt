@@ -1,18 +1,13 @@
 package ch.zkb.registrierung.ui.registration
 
 import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import android.util.Patterns
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.AndroidViewModel
-import ch.zkb.registrierung.data.RegistrationRepository
-import ch.zkb.registrierung.data.Result
-
 import ch.zkb.registrierung.R
+import ch.zkb.registrierung.data.RegistrationRepository
 import ch.zkb.registrierung.data.ZkbDatabase
-import java.util.*
 
 class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
 
@@ -23,7 +18,8 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
     // TODO FIXME hier crasht es noch...
 //    val userDao = ZkbDatabase.getDatabase(app).userDao()
 //    private val registrationRepository: RegistrationRepository = RegistrationRepository(userDao)
-    private val registrationRepository: RegistrationRepository = RegistrationRepository(ZkbDatabase.getDatabase(app).userDao())
+    private val registrationRepository: RegistrationRepository =
+        RegistrationRepository(ZkbDatabase.getDatabase(app).userDao())
 
     private val _registrationForm = MutableLiveData<RegistrationFormState>()
     val registrationFormState: LiveData<RegistrationFormState> = _registrationForm
@@ -49,36 +45,35 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
 //        }
     }
 
+    private val TAG = "RegistrationViewModel"
+
     fun registrationDataChanged(fullname: String, email: String, birthdate: Long) {
+        Log.d(TAG, "registrationDataChanged: birthdate: " + birthdate)
         if (!isFullnameValid(fullname)) {
-            _registrationForm.value = RegistrationFormState(fullnameError = R.string.invalid_fullname)
+            _registrationForm.value =
+                RegistrationFormState(fullnameError = R.string.invalid_fullname)
         } else if (!isEmailValid(email)) {
             _registrationForm.value = RegistrationFormState(emailError = R.string.invalid_email)
+        } else if (birthdate < 1000L) {
+            _registrationForm.value =
+                RegistrationFormState(birthdateError = R.string.invalid_birthdate)
         } else {
-            _registrationForm.value = RegistrationFormState(isDataValid = true)
+            _registrationForm.value = RegistrationFormState()
         }
     }
 
-    // A placeholder username validation check
-    // TODO namen validierung
-    // TODO namen validierung
-    // TODO namen validierung
-    // TODO namen validierung
-    // TODO namen validierung
+    /**
+     * Validating the entered name here
+     */
     private fun isFullnameValid(fullname: String): Boolean {
-        return if (fullname.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(fullname).matches()
-        } else {
-            fullname.isNotBlank()
-        }
+        return fullname.isNotBlank()
     }
 
-    // A placeholder password validation check
-    // TODO email validierung
-    // TODO email validierung
-    // TODO email validierung
-    // TODO email validierung
+    /**
+     * Validating the entered email address here
+     */
     private fun isEmailValid(email: String): Boolean {
+        Log.d(TAG, "isEmailValid: " + email)
         return email.length > 5
     }
 

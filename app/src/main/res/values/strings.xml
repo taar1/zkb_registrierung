@@ -3,19 +3,14 @@
 
     <string name="action_register">Registrieren</string>
     <string name="welcome">"Welcome!"</string>
-    <string name="invalid_fullname">Das Feld ist ungültig</string>
-    <string name="invalid_email">Die E-Mail ist ungültig</string>
+    <string name="invalid_fullname">Das Feld \"Name\" darf nicht leer sein.</string>
+    <string name="invalid_email">Die E-Mail ist ungültig.</string>
+    <string name="invalid_birthdate">Geburtsdatum ist ungültig.</string>
     <string name="register_failed">"Registrierung fehlergeschlagen"</string>
-    <string name="full_name">Vollständiger Name</string>
+    <string name="full_name">Name</string>
     <string name="email">E-Mail</string>
     <string name="birthdate">Geburtsdatum</string>
     <string name="thanks_for_registering">Danke für die Registrierung</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_registration2">Registration2Activity</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="everything_ok">Alle Eingaben gültig. Registrierung jetzt möglich.</string>
 </resources>

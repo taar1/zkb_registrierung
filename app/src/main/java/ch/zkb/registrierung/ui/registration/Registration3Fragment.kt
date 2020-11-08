@@ -4,11 +4,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -31,8 +29,9 @@ class Registration3Fragment @Inject constructor() : Fragment() {
     private val registrationViewModel: RegistrationViewModel by viewModels()
     private lateinit var viewBinding: RegistrationFragmentBinding
 
-    private val viewModel: Registration3ViewModel by viewModels()
-
+    var combinedCal: Calendar = GregorianCalendar(TimeZone.getTimeZone("UTC"))
+    var selectedBirthdateTimestamp: Long = 0
+    val dateFormatStyle: String = "d. MMMM yyyy"
 
     companion object {
         fun newInstance() = Registration3Fragment()
@@ -53,9 +52,34 @@ class Registration3Fragment @Inject constructor() : Fragment() {
         val email = viewBinding.email
         val birthdate = viewBinding.birthdate
         val register = viewBinding.register
-        val loading = viewBinding.loading
+        val notificationMessage = viewBinding.notificationMessage
 
         setMinAndMaxDateInDatePicker()
+
+        /**
+         * Observing the registrationFormState
+         */
+        registrationViewModel.registrationFormState.observe(viewLifecycleOwner, {
+            register.isEnabled = false
+            when {
+                it.fullnameError != null -> {
+                    notificationMessage.visibility = View.VISIBLE
+                    notificationMessage.text = getString(it.fullnameError)
+                }
+                it.emailError != null -> {
+                    notificationMessage.visibility = View.VISIBLE
+                    notificationMessage.text = getString(it.emailError)
+                }
+                it.birthdateError != null -> {
+                    notificationMessage.visibility = View.VISIBLE
+                    notificationMessage.text = getString(it.birthdateError)
+                }
+                else -> {
+                    notificationMessage.visibility = View.INVISIBLE
+                    register.isEnabled = true
+                }
+            }
+        })
 
 
 //        registrationViewModel.registrationFormState.observe(viewLifecycleOwner, Observer {
@@ -89,95 +113,131 @@ class Registration3Fragment @Inject constructor() : Fragment() {
 //        })
 
         fullname.afterTextChanged {
-            // TODO FIXME  Date() mit etwas richtigem ersetzen...
-            // TODO FIXME  Date() mit etwas richtigem ersetzen...
-            // TODO FIXME  Date() mit etwas richtigem ersetzen...
             registrationViewModel.registrationDataChanged(
                 fullname.text.toString(),
                 email.text.toString(),
-                Date().time
+                selectedBirthdateTimestamp
             )
         }
 
         email.apply {
             afterTextChanged {
-                // TODO FIXME  Date() mit etwas richtigem ersetzen...
-                // TODO FIXME  Date() mit etwas richtigem ersetzen...
-                // TODO FIXME  Date() mit etwas richtigem ersetzen...
                 registrationViewModel.registrationDataChanged(
                     fullname.text.toString(),
                     email.text.toString(),
-                    Date().time
+                    selectedBirthdateTimestamp
                 )
             }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    // TODO FIXME  Date() mit etwas richtigem ersetzen...
-                    // TODO FIXME  Date() mit etwas richtigem ersetzen...
-                    // TODO FIXME  Date() mit etwas richtigem ersetzen...
-
-                    EditorInfo.IME_ACTION_DONE ->
-                        registrationViewModel.register(
-                            fullname.text.toString(),
-                            email.text.toString(),
-                            Date().time
-                        )
-                }
-                false
-            }
-
-
-
-            register.setOnClickListener {
-                // TODO FIXME  Date() mit etwas richtigem ersetzen...
-                // TODO FIXME  Date() mit etwas richtigem ersetzen...
-                // TODO FIXME  Date() mit etwas richtigem ersetzen...
-                loading.visibility = View.VISIBLE
-                registrationViewModel.register(
-                    fullname.text.toString(),
-                    email.text.toString(),
-                    Date().time
-                )
-            }
+//            setOnEditorActionListener { _, actionId, _ ->
+//                when (actionId) {
+//                    EditorInfo.IME_ACTION_DONE ->
+//                        registrationViewModel.register(
+//                            fullname.text.toString(),
+//                            email.text.toString(),
+//                            selectedBirthdateTimestamp
+//                        )
+//                }
+//                false
+//            }
         }
 
         // User clicks into the Birthdate field to display the date picker dialog
         birthdate.setOnClickListener {
-            date_picker_layout.visibility = View.VISIBLE
-            container.setBackgroundColor(Color.BLACK)
+            toggleMainFormElements(false)
+            toggleDatePickerDialog(true)
         }
 
-        // Confirmation button in Birthdate selection dialog
-        confirm_date_button.setOnClickListener {
-            // Hide date selector, show layout underneath
-            date_picker_layout.visibility = View.GONE
-            container.setBackgroundColor(Color.WHITE)
+        // User clicked on conform button in the birthday selector dialog
+        buttonConfirmBirthdate.setOnClickListener {
+            toggleDatePickerDialog(false)
+            toggleMainFormElements(true)
 
-            var selectedDate = LocalDate.of(date_picker.year, date_picker.month + 1, date_picker.dayOfMonth)
-            var localeFormatter = DateTimeFormatter.ofPattern("d. MMMM yyyy") // Swiss Date Format
+            combinedCal.set(
+                datePicker.year,
+                datePicker.month + 1,
+                datePicker.dayOfMonth
+            )
+            selectedBirthdateTimestamp = combinedCal.timeInMillis
 
-            // Fill the EditText field with the selected date
+
+            val selectedDate = LocalDate.of(
+                datePicker.year, datePicker.month + 1, datePicker.dayOfMonth
+            )
+            val localeFormatter = DateTimeFormatter.ofPattern(dateFormatStyle) // Swiss Date Format
+
+            // Display the formatted selected birthdate
             birthdate.setText(selectedDate.format(localeFormatter))
+
+            // Here we set the selected birthdate as timestamp
+            val calendar = Calendar.getInstance()
+            calendar.set(datePicker.year, datePicker.month, datePicker.dayOfMonth)
+            selectedBirthdateTimestamp = calendar.timeInMillis
+
+            registrationViewModel.registrationDataChanged(
+                fullname.text.toString(),
+                email.text.toString(),
+                selectedBirthdateTimestamp
+            )
         }
 
 //        register.isEnabled = true
+
+
+        // TODO FIXME objekt übergeben wegen email damit man eine room DB abfrage machen kann
         register.setOnClickListener(
             Navigation.createNavigateOnClickListener(
                 R.id.registrationSuccessFragment,
                 null
             )
         )
+
+//        register.setOnClickListener {
+//            loading.visibility = View.VISIBLE
+//
+//            registrationViewModel.register(
+//                fullname.text.toString(),
+//                email.text.toString(),
+//                selectedBirthdateTimestamp
+//            )
+//        }
+    }
+
+    /**
+     * Enables or disables the main form (name, email, birthdate)
+     */
+    private fun toggleMainFormElements(isEnabled: Boolean) {
+        if (isEnabled) {
+            container.setBackgroundColor(Color.WHITE)
+        } else {
+            container.setBackgroundColor(Color.BLACK)
+        }
+
+        fullName.isEnabled = isEnabled
+        email.isEnabled = isEnabled
+        birthdate.isEnabled = isEnabled
+        register.isEnabled = isEnabled
+    }
+
+    /**
+     * Enables or disables the date picker dialog
+     */
+    private fun toggleDatePickerDialog(isEnabled: Boolean) {
+        if (isEnabled) {
+            datePickerLayout.visibility = View.VISIBLE
+        } else {
+            datePickerLayout.visibility = View.GONE
+        }
     }
 
     private fun setMinAndMaxDateInDatePicker() {
         val minDate = Calendar.getInstance()
         minDate.set(1900, 0, 1)
-        date_picker.minDate = minDate.timeInMillis
+        datePicker.minDate = minDate.timeInMillis
 
         val maxDate = Calendar.getInstance()
         maxDate.set(2019, 11, 31)
-        date_picker.maxDate = maxDate.timeInMillis
+        datePicker.maxDate = maxDate.timeInMillis
     }
 
     private val TAG = "Registration3Fragment"
