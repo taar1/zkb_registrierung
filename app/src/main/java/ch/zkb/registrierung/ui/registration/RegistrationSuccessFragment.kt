@@ -1,10 +1,10 @@
 package ch.zkb.registrierung.ui.registration
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -41,21 +41,21 @@ class RegistrationSuccessFragment : Fragment() {
         val emailTextField = viewBinding.valueEmail
         val birthdateTextField = viewBinding.valueBirthdate
 
-        val emailArg = args.email
-        Log.d(TAG, "XXXXX onViewCreated: email: " + emailArg)
 
+        viewModel.registrationResult.observe(viewLifecycleOwner, {
+            if (it.success != null) {
+                fullnameTextField.text = it.success.fullname
+                emailTextField.text = it.success.email
 
-        viewModel.registeredUser.observe(viewLifecycleOwner, {
-            fullnameTextField.text = it.fullname
-            emailTextField.text = it.email
+                // Format birthdate to readable String
+                val format = SimpleDateFormat(SWISS_DATE_FORMAT, Locale.GERMANY)
+                format.format(Date(it.success.birthdate))
 
-            // Format birthdate to readable String
-            val format = SimpleDateFormat(SWISS_DATE_FORMAT, Locale.GERMANY)
-            format.format(Date(it.birthdate))
-
-            birthdateTextField.text = format.format(Date(it.birthdate))
+                birthdateTextField.text = format.format(Date(it.success.birthdate))
+            } else if (it.error != null) {
+                Toast.makeText(activity, it.error, Toast.LENGTH_LONG).show()
+            }
         })
-
 
         viewModel.getUser(args.email)
     }

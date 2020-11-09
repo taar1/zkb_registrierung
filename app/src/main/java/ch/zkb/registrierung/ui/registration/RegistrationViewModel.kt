@@ -1,7 +1,6 @@
 package ch.zkb.registrierung.ui.registration
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,8 +32,6 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
             registrationRepository.insertUser(RegisteredUser(fullname, email, birthdate))
             val registeredUser: RegisteredUser? = registrationRepository.getUser(email)
 
-            Log.d(TAG, "XXXXX registeredUser: " + registeredUser)
-
             if (registeredUser == null) {
                 _registrationResult.value = RegistrationResult(error = R.string.register_failed)
             } else {
@@ -49,7 +46,9 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
                 RegistrationFormState(fullnameError = R.string.invalid_fullname)
         } else if (!isEmailValid(email)) {
             _registrationForm.value = RegistrationFormState(emailError = R.string.invalid_email)
-        } else if (birthdate < 1000L) {
+        } else if (birthdate == 0L) {
+            // birthdate == 0L check is not ideal.
+            // But since we only select a day and no time the value 0L will never occur unless the field is empty.
             _registrationForm.value =
                 RegistrationFormState(birthdateError = R.string.invalid_birthdate)
         } else {

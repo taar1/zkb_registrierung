@@ -13,4 +13,5 @@
     <string name="thanks_for_registering">Danke für die Registrierung.</string>
     <string name="confirm">Bestätigen</string>
     <string name="everything_ok">Alle Eingaben gültig. Registrierung jetzt möglich.</string>
+    <string name="error_getting_user">Der Benutzer konnte nicht ausgelesen werden.</string>
 </resources>

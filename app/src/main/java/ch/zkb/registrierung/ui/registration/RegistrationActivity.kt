@@ -9,11 +9,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import ch.zkb.registrierung.R
 
+
 class RegistrationActivity : AppCompatActivity(R.layout.activity_registration) {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-
-    val SWISS_DATE_FORMAT: String = "d. MMMM yyyy"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +27,7 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_registration) {
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
+    override fun onSupportNavigateUp() =
+        findNavController(R.id.navHostFragment).navigateUp() || super.onSupportNavigateUp()
 
-    override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
 }
