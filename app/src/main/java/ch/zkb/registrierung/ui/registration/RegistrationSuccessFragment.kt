@@ -12,6 +12,7 @@ import ch.zkb.registrierung.databinding.RegistrationSuccessFragmentBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class RegistrationSuccessFragment : Fragment() {
     private val TAG = "RegistrationSuccessFrag"
 
@@ -41,7 +42,7 @@ class RegistrationSuccessFragment : Fragment() {
         val emailTextField = viewBinding.valueEmail
         val birthdateTextField = viewBinding.valueBirthdate
 
-
+        // Observing the user data from the room database.
         viewModel.registrationResult.observe(viewLifecycleOwner, {
             if (it.success != null) {
                 fullnameTextField.text = it.success.fullname
@@ -57,6 +58,7 @@ class RegistrationSuccessFragment : Fragment() {
             }
         })
 
+        // Attempt to load the user data
         viewModel.getUser(args.email)
     }
 

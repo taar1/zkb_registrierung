@@ -10,6 +10,7 @@ import ch.zkb.registrierung.data.RegistrationRepository
 import ch.zkb.registrierung.data.ZkbDatabase
 import ch.zkb.registrierung.data.model.RegisteredUser
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern.compile
 
 class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
     private val TAG = "RegistrationViewModel"
@@ -67,13 +68,21 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
      * Validating the entered email address here
      */
     private fun isEmailValid(email: String): Boolean {
-        // TODO email validation
-        // TODO email validation
-        // TODO email validation
-        // TODO email validation
-        // TODO email validation
-        return email.length > 5
+        return email.isEmail()
     }
 
+    private val emailRegex = compile(
+        "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                "\\@" +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                "(" +
+                "\\." +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{1,25}" +
+                ")+"
+    )
+
+    private fun String.isEmail(): Boolean {
+        return emailRegex.matcher(this).matches()
+    }
 
 }

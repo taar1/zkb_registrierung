@@ -22,7 +22,8 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_registration) {
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        appBarConfiguration = AppBarConfiguration(navController.graph)
+        appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.registrationFragment, R.id.registrationSuccessFragment))
 
         setupActionBarWithNavController(navController, appBarConfiguration)
     }

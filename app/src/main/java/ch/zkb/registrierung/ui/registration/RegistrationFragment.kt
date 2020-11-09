@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,14 +19,14 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class RegistrationFragment : Fragment() {
-    private val TAG = "Registration3Fragment"
+    private val TAG = "RegistrationFragment"
+    private val SWISS_DATE_FORMAT: String = "d. MMMM yyyy"
 
     private val registrationViewModel: RegistrationViewModel by viewModels()
-    private lateinit var viewBinding: RegistrationFragmentBinding
 
+    private lateinit var viewBinding: RegistrationFragmentBinding
     var combinedCal: Calendar = GregorianCalendar(TimeZone.getTimeZone("UTC"))
     var selectedBirthdateTimestamp: Long = 0
-    val SWISS_DATE_FORMAT: String = "d. MMMM yyyy"
 
     companion object {
         fun newInstance() = RegistrationFragment()
@@ -80,6 +81,8 @@ class RegistrationFragment : Fragment() {
          * registration was successful.
          */
         registrationViewModel.registrationResult.observe(viewLifecycleOwner, {
+
+            Log.d(TAG, "XXXXX registrationViewModel.registrationResult: ")
 
             if (it.error != null) {
                 notificationMessage.visibility = View.VISIBLE

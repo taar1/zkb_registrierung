@@ -12,9 +12,6 @@ import ch.zkb.registrierung.data.model.RegisteredUser
 import kotlinx.coroutines.launch
 
 class RegistrationSuccessViewModel(app: Application) : AndroidViewModel(app) {
-
-    private val TAG = "RegistrationSuccessViewModel"
-
     private val registrationRepository: RegistrationRepository =
         RegistrationRepository(ZkbDatabase.getDatabase(app).userDao())
 

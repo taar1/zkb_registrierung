@@ -8,19 +8,19 @@
     <fragment
         android:id="@+id/registrationFragment"
         android:name="ch.zkb.registrierung.ui.registration.RegistrationFragment"
-        android:label="RegistrationFragment"
+        android:label="@string/app_name"
         tools:layout="@layout/registration_fragment">
         <action
             android:id="@+id/action_registrationFragment_to_registrationSuccessFragment"
-            app:destination="@id/registrationSuccessFragment"/>
+            app:destination="@id/registrationSuccessFragment" />
 
     </fragment>
 
     <fragment
         android:id="@+id/registrationSuccessFragment"
         android:name="ch.zkb.registrierung.ui.registration.RegistrationSuccessFragment"
-        android:label="RegistrationSuccessFragment"
-        tools:layout="@layout/registration_success_fragment" >
+        android:label="@string/registration_success"
+        tools:layout="@layout/registration_success_fragment">
         <argument
             android:name="email"
             app:argType="string"
