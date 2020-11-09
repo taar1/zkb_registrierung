@@ -1,28 +1,24 @@
 package ch.zkb.registrierung.ui.registration
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import ch.zkb.registrierung.R
 
-class Registration3Activity : AppCompatActivity(R.layout.activity_registration) {
-    private val TAG = "Registration3Activity"
-
+class RegistrationActivity : AppCompatActivity(R.layout.activity_registration) {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
+    val SWISS_DATE_FORMAT: String = "d. MMMM yyyy"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d(TAG, "Registration3Activity onCreate: ")
-//        setContentView(R.layout.activity_registration)
-
-        // Navigation Component
+        // Navigation
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -31,4 +27,7 @@ class Registration3Activity : AppCompatActivity(R.layout.activity_registration) 
 
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
+
+
+    override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
 }

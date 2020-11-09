@@ -1,9 +1,11 @@
 package ch.zkb.registrierung.ui.registration
 
+import ch.zkb.registrierung.data.model.RegisteredUser
+
 /**
- * Authentication result : success (user details) or error message.
+ * Registration result: success (RegisteredUser object) or error message.
  */
 data class RegistrationResult(
-        val success: RegisteredUserView? = null,
+        val success: RegisteredUser? = null,
         val error: Int? = null
 )

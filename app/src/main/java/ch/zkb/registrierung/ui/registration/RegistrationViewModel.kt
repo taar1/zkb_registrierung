@@ -13,6 +13,7 @@ import ch.zkb.registrierung.data.model.RegisteredUser
 import kotlinx.coroutines.launch
 
 class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
+    private val TAG = "RegistrationViewModel"
 
     private val registrationRepository: RegistrationRepository =
         RegistrationRepository(ZkbDatabase.getDatabase(app).userDao())
@@ -23,52 +24,26 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
     private val _registrationResult = MutableLiveData<RegistrationResult>()
     val registrationResult: LiveData<RegistrationResult> = _registrationResult
 
+
     fun insertUserToDb(fullname: String, email: String, birthdate: Long) {
 
+        // Using Coroutines so we don't block the UI.
         viewModelScope.launch {
 
-            // TODO FIXME insert into DB, check if success and update "registrationResult" object
-            // TODO FIXME insert into DB, check if success and update "registrationResult" object
-            // TODO FIXME insert into DB, check if success and update "registrationResult" object
-            // TODO FIXME insert into DB, check if success and update "registrationResult" object
+            registrationRepository.insertUser(RegisteredUser(fullname, email, birthdate))
+            val registeredUser: RegisteredUser? = registrationRepository.getUser(email)
 
-            val result =
-                registrationRepository.insertUser(RegisteredUser(fullname, email, birthdate))
+            Log.d(TAG, "XXXXX registeredUser: " + registeredUser)
 
-            registrationRepository.getUser(email)
-
-//            _registrationResult.value =
-
-//            try {
-//
-//
-//                Log.d(TAG, "XXXXX refreshDataFromRepository: NETWORK OK")
-//            } catch (networkError: IOException) {
-//                Log.d(TAG, "XXXXX refreshDataFromRepository: IOException NO NETWORK")
-//
-//                repository.getSystemsListFromRoom()
-//                _systems.postValue(repository.systemsList)
-//            }
-//
-//            // If data is empty show a error message
-//            if (repository.systemsList.isNullOrEmpty()) {
-//                Log.d(TAG, "XXXXX refreshDataFromRepository: isNullOrEmpty")
-//                _eventNetworkError.value = true
-//            }
+            if (registeredUser == null) {
+                _registrationResult.value = RegistrationResult(error = R.string.register_failed)
+            } else {
+                _registrationResult.value = RegistrationResult(success = registeredUser)
+            }
         }
-
-//
-//        if (result is Result.Success) {
-//            _registrationResult.value = RegistrationResult(success = RegisteredUserView(displayName = result.data.fullname))
-//        } else {
-//            _registrationResult.value = RegistrationResult(error = R.string.register_failed)
-//        }
     }
 
-    private val TAG = "RegistrationViewModel"
-
     fun registrationDataChanged(fullname: String, email: String, birthdate: Long) {
-        Log.d(TAG, "registrationDataChanged: birthdate: " + birthdate)
         if (!isFullnameValid(fullname)) {
             _registrationForm.value =
                 RegistrationFormState(fullnameError = R.string.invalid_fullname)

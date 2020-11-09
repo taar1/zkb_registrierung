@@ -8,32 +8,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
-import ch.zkb.registrierung.R
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import ch.zkb.registrierung.databinding.RegistrationFragmentBinding
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.registration_fragment.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
-import javax.inject.Inject
 
-
-@AndroidEntryPoint
-class Registration3Fragment @Inject constructor() : Fragment() {
+class RegistrationFragment : Fragment() {
+    private val TAG = "Registration3Fragment"
 
     private val registrationViewModel: RegistrationViewModel by viewModels()
     private lateinit var viewBinding: RegistrationFragmentBinding
 
     var combinedCal: Calendar = GregorianCalendar(TimeZone.getTimeZone("UTC"))
     var selectedBirthdateTimestamp: Long = 0
-    val dateFormatStyle: String = "d. MMMM yyyy"
+    val SWISS_DATE_FORMAT: String = "d. MMMM yyyy"
 
     companion object {
-        fun newInstance() = Registration3Fragment()
+        fun newInstance() = RegistrationFragment()
     }
 
     override fun onCreateView(
@@ -80,31 +75,25 @@ class Registration3Fragment @Inject constructor() : Fragment() {
             }
         })
 
-
-        // TODO FIXME check if registration was a success (DB insert was successful)
-        // TODO FIXME an dif so show the next fragment with the data.
+        /**
+         * Observing the registrationResult object to get notified if the
+         * registration was successful.
+         */
         registrationViewModel.registrationResult.observe(viewLifecycleOwner, {
 
-//            it.error
-//            it.success
-//
-//            loading.visibility = View.GONE
-//            if (loginResult.error != null) {
-//                showLoginFailed(loginResult.error)
-//            }
-//            if (loginResult.success != null) {
-//                updateUiWithUser(loginResult.success)
-//            }
+            if (it.error != null) {
+                notificationMessage.visibility = View.VISIBLE
+                notificationMessage.text = getString(it.error)
+            }
 
+            if (it.success != null) {
+                notificationMessage.visibility = View.INVISIBLE
 
-            // If success, go to next fragment
-            if (true) {
-                // TODO go to next fragment here....
-                // TODO pass email address to make DB call
-                Navigation.createNavigateOnClickListener(
-                    R.id.registrationSuccessFragment,
-                    null
-                )
+                val action =
+                    RegistrationFragmentDirections.actionRegistrationFragmentToRegistrationSuccessFragment(
+                        email = it.success.email
+                    )
+                findNavController(this).navigate(action)
             }
 
         })
@@ -147,10 +136,9 @@ class Registration3Fragment @Inject constructor() : Fragment() {
             val selectedDate = LocalDate.of(
                 datePicker.year, datePicker.month + 1, datePicker.dayOfMonth
             )
-            val localeFormatter = DateTimeFormatter.ofPattern(dateFormatStyle) // Swiss Date Format
 
             // Display the formatted selected birthdate
-            birthdate.setText(selectedDate.format(localeFormatter))
+            birthdate.setText(selectedDate.format(DateTimeFormatter.ofPattern(SWISS_DATE_FORMAT)))
 
             // Here we set the selected birthdate as timestamp
             val calendar = Calendar.getInstance()
@@ -165,6 +153,8 @@ class Registration3Fragment @Inject constructor() : Fragment() {
         }
 
         register.setOnClickListener {
+            notificationMessage.visibility = View.INVISIBLE
+
             // TODO show a temporary loading animation.
             registrationViewModel.insertUserToDb(
                 fullname.text.toString(),
@@ -180,8 +170,10 @@ class Registration3Fragment @Inject constructor() : Fragment() {
     private fun toggleMainFormElements(isEnabled: Boolean) {
         if (isEnabled) {
             container.setBackgroundColor(Color.WHITE)
+            notificationMessage.visibility = View.VISIBLE
         } else {
             container.setBackgroundColor(Color.BLACK)
+            notificationMessage.visibility = View.INVISIBLE
         }
 
         fullName.isEnabled = isEnabled
@@ -196,8 +188,10 @@ class Registration3Fragment @Inject constructor() : Fragment() {
     private fun toggleDatePickerDialog(isEnabled: Boolean) {
         if (isEnabled) {
             datePickerLayout.visibility = View.VISIBLE
+            notificationMessage.visibility = View.INVISIBLE
         } else {
             datePickerLayout.visibility = View.GONE
+            notificationMessage.visibility = View.VISIBLE
         }
     }
 
@@ -209,20 +203,6 @@ class Registration3Fragment @Inject constructor() : Fragment() {
         val maxDate = Calendar.getInstance()
         maxDate.set(2019, 11, 31)
         datePicker.maxDate = maxDate.timeInMillis
-    }
-
-    private val TAG = "Registration3Fragment"
-
-    private fun updateUiWithUser(model: RegisteredUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
-            activity,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
     }
 }
 

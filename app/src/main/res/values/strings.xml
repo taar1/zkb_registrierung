@@ -1,16 +1,16 @@
 <resources>
-    <string name="app_name">Registrierung ZKB</string>
+    <string name="app_name">ZKB Registrierung</string>
 
     <string name="action_register">Registrieren</string>
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_fullname">Das Feld \"Name\" darf nicht leer sein.</string>
     <string name="invalid_email">Die E-Mail ist ungültig.</string>
     <string name="invalid_birthdate">Geburtsdatum ist ungültig.</string>
-    <string name="register_failed">"Registrierung fehlergeschlagen"</string>
+    <string name="register_failed">Speichern der Daten fehlergeschlagen.</string>
     <string name="full_name">Name</string>
     <string name="email">E-Mail</string>
     <string name="birthdate">Geburtsdatum</string>
-    <string name="thanks_for_registering">Danke für die Registrierung</string>
+    <string name="thanks_for_registering">Danke für die Registrierung.</string>
     <string name="confirm">Bestätigen</string>
     <string name="everything_ok">Alle Eingaben gültig. Registrierung jetzt möglich.</string>
 </resources>

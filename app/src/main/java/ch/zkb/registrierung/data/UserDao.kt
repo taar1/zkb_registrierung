@@ -9,9 +9,6 @@ import ch.zkb.registrierung.data.model.RegisteredUser
 @Dao
 interface UserDao {
 
-    @Query("SELECT * FROM registered_user ORDER BY fullname ASC")
-    fun getUsers(): List<RegisteredUser>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(registeredUser: RegisteredUser)
 
