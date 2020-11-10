@@ -9,7 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import ch.zkb.registrierung.databinding.RegistrationSuccessFragmentBinding
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -48,11 +49,16 @@ class RegistrationSuccessFragment : Fragment() {
                 fullnameTextField.text = it.success.fullname
                 emailTextField.text = it.success.email
 
-                // Format birthdate to readable String
-                val format = SimpleDateFormat(SWISS_DATE_FORMAT, Locale.GERMANY)
-                format.format(Date(it.success.birthdate))
+                // Format the timestamp to readable local date
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = it.success.birthdate
 
-                birthdateTextField.text = format.format(Date(it.success.birthdate))
+                val ld = LocalDate.of(
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH) + 1,
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                )
+                birthdateTextField.text = ld.format(DateTimeFormatter.ofPattern(SWISS_DATE_FORMAT))
             } else if (it.error != null) {
                 Toast.makeText(activity, it.error, Toast.LENGTH_LONG).show()
             }

@@ -60,14 +60,14 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
     /**
      * Validating the entered name here
      */
-    private fun isFullnameValid(fullname: String): Boolean {
+     fun isFullnameValid(fullname: String): Boolean {
         return fullname.isNotBlank()
     }
 
     /**
      * Validating the entered email address here
      */
-    private fun isEmailValid(email: String): Boolean {
+     fun isEmailValid(email: String): Boolean {
         return email.isEmail()
     }
 

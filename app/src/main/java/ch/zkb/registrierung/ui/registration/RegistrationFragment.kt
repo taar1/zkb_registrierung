@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,9 +80,6 @@ class RegistrationFragment : Fragment() {
          * registration was successful.
          */
         registrationViewModel.registrationResult.observe(viewLifecycleOwner, {
-
-            Log.d(TAG, "XXXXX registrationViewModel.registrationResult: ")
-
             if (it.error != null) {
                 notificationMessage.visibility = View.VISIBLE
                 notificationMessage.text = getString(it.error)
@@ -211,7 +207,7 @@ class RegistrationFragment : Fragment() {
 
 
 /**
- * Extension function to simplify setting an afterTextChanged action to EditText components.
+ * Extension function to simplify setting an afterTextChanged action to EditText components
  */
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
