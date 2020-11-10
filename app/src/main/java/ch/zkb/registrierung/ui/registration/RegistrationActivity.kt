@@ -17,7 +17,7 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_registration) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Navigation
+        // Using Navigation Component (Jetpack)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController

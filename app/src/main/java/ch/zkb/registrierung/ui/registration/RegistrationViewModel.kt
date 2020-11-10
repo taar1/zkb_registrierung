@@ -12,6 +12,9 @@ import ch.zkb.registrierung.data.model.RegisteredUser
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern.compile
 
+/**
+ * ViewModel of the initial view with the input form. Here we do the input validation.
+ */
 class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
     private val TAG = "RegistrationViewModel"
 
@@ -50,6 +53,7 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
         } else if (birthdate == 0L) {
             // birthdate == 0L check is not ideal.
             // But since we only select a day and no time the value 0L will never occur unless the field is empty.
+            // Min and Max date check is already happening within the datePicker dialog.
             _registrationForm.value =
                 RegistrationFormState(birthdateError = R.string.invalid_birthdate)
         } else {
@@ -60,14 +64,14 @@ class RegistrationViewModel(app: Application) : AndroidViewModel(app) {
     /**
      * Validating the entered name here
      */
-     fun isFullnameValid(fullname: String): Boolean {
+    fun isFullnameValid(fullname: String): Boolean {
         return fullname.isNotBlank()
     }
 
     /**
      * Validating the entered email address here
      */
-     fun isEmailValid(email: String): Boolean {
+    fun isEmailValid(email: String): Boolean {
         return email.isEmail()
     }
 

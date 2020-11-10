@@ -17,6 +17,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+/**
+ * This is the initial view with the input form.
+ */
 class RegistrationFragment : Fragment() {
     private val TAG = "RegistrationFragment"
     private val SWISS_DATE_FORMAT: String = "d. MMMM yyyy"

@@ -13,7 +13,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-
+/**
+ * Second view after the user clicked the registration button. It displays a thank you
+ * message and the data the user entered on the view before.
+ */
 class RegistrationSuccessFragment : Fragment() {
     private val TAG = "RegistrationSuccessFrag"
 
