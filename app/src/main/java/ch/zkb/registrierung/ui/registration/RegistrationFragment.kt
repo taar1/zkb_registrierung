@@ -154,7 +154,7 @@ class RegistrationFragment : Fragment() {
         register.setOnClickListener {
             notificationMessage.visibility = View.INVISIBLE
 
-            // TODO show a temporary loading animation.
+            // Here you could possibly also show some loading animation.
             registrationViewModel.insertUserToDb(
                 fullname.text.toString(),
                 email.text.toString(),
